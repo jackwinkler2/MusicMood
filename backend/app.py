@@ -28,9 +28,12 @@ def login():
 
 @app.route('/callback')
 def callback():
-    token_info = sp_oauth.get_access_token(request.args['code'])  # Exchange code for token
-    session['token_info'] = token_info  # Save token in session
-    return redirect('/profile')  # Redirect to profile or dashboard
+    try:
+        token_info = sp_oauth.get_access_token(request.args['code'])  # Exchange code for token
+        session['token_info'] = token_info  # Save token in session
+        return redirect('/profile')  # Redirect to profile or dashboard
+    except Exception as e:
+        return f"Error: {str(e)}", 500  # Print the error message for debugging
 
 @app.route('/profile')
 def profile():
