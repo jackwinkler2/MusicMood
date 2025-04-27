@@ -2,9 +2,9 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
 # Spotify API credentials (from Spotify Developer Dashboard)
-CLIENT_ID = 'your-client-id'
-CLIENT_SECRET = 'your-client-secret'
-REDIRECT_URI = 'https://yourappname.vercel.app/callback'
+CLIENT_ID = 'd3dfbb511519452eb37598a2f6bff37d'
+CLIENT_SECRET = '95ee10c92e874b158386029f13b13456'
+REDIRECT_URI = 'https://www.moodmusic.club/callback'
 
 # Initialize Spotify OAuth
 sp_oauth = SpotifyOAuth(client_id=CLIENT_ID,

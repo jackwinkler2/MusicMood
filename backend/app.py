@@ -4,12 +4,12 @@ from spotipy.oauth2 import SpotifyOAuth
 import secrets
 
 app = Flask(__name__)
-app.secret_key = secrets.token_hex(16)  # Make sure to set this
+app.secret_key = secrets.token_hex(16)  
 
 # Spotify OAuth setup
-CLIENT_ID = 'd3dfbb511519452eb37598a2f6bff37d'  # Replace with your Spotify client ID
-CLIENT_SECRET = '95ee10c92e874b158386029f13b13456'  # Replace with your Spotify client secret
-REDIRECT_URI = 'https://www.moodmusic.club/'  # Ensure this matches your Spotify Developer redirect URI
+CLIENT_ID = 'd3dfbb511519452eb37598a2f6bff37d'  
+CLIENT_SECRET = '95ee10c92e874b158386029f13b13456'  
+REDIRECT_URI = 'https://www.moodmusic.club/callback'  
 
 # Initialize Spotify OAuth
 sp_oauth = SpotifyOAuth(client_id=CLIENT_ID,
