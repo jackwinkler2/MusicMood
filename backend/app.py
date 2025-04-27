@@ -39,16 +39,35 @@ def callback():
             return "No authorization code received", 400
 
         # Exchange the authorization code for an access token
-        token_info = sp_oauth.get_access_token(code)
-        app.logger.debug(f"Token info: {token_info}")
+        try:
+            token_info = sp_oauth.get_access_token(code)
+            if not token_info or 'access_token' not in token_info:
+                raise ValueError("Failed to retrieve valid access token.")
+            app.logger.debug(f"Token info: {token_info}")
+        except ValueError as ve:
+            app.logger.error(f"Token exchange failed: {str(ve)}")
+            return f"Token exchange failed: {str(ve)}", 400
+        except Exception as e:
+            app.logger.error(f"Unexpected error during token exchange: {str(e)}")
+            return f"Error during token exchange: {str(e)}", 400
 
-        # Save token in session
-        session['token_info'] = token_info
+        # Save token in session, ensuring the session is active
+        try:
+            session['token_info'] = token_info
+        except Exception as e:
+            app.logger.error(f"Error saving token to session: {str(e)}")
+            return f"Error saving token to session: {str(e)}", 400
 
-        return redirect('/profile')  # Redirect to profile or dashboard
+        # Redirect to profile or dashboard
+        try:
+            return redirect('/')  # Redirect to the main page or dashboard
+        except Exception as e:
+            app.logger.error(f"Error during redirect: {str(e)}")
+            return f"Error during redirect: {str(e)}", 400
+
     except Exception as e:
         app.logger.error(f"Error during callback: {str(e)}")
-        return f"Error during callback: {str(e)}", 400  # Return custom 400 error code for callback-related issues
+        return f"Error during callback: {str(e)}", 400  # Return a generic 500 error for unexpected failures
 
 
 @app.route('/profile')
