@@ -1,3 +1,4 @@
+from flask import session
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
