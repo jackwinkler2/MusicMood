@@ -30,16 +30,26 @@ def login():
 @app.route('/callback')
 def callback():
     app.logger.debug(f"Callback request args: {request.args}")
+
     try:
-        token_info = sp_oauth.get_access_token(request.args['code'])  # Exchange code for token
-        session['token_info'] = token_info  # Save token in session
+        # Check if 'code' parameter exists in the callback request
+        code = request.args.get('code', None)
+        if not code:
+            app.logger.error("No authorization code returned in the callback.")
+            return "No authorization code received", 400
+
+        # Exchange the authorization code for an access token
+        token_info = sp_oauth.get_access_token(code)
+        app.logger.debug(f"Token info: {token_info}")
+
+        # Save token in session
+        session['token_info'] = token_info
+
         return redirect('/profile')  # Redirect to profile or dashboard
     except Exception as e:
-        # Log the error for debugging purposes
         app.logger.error(f"Error during callback: {str(e)}")
-        
-        # Return a custom error code (e.g., 400 for a callback error)
-        return f"Error during callback: {str(e)}", 400  # 400 indicates bad request or callback-related error
+        return f"Error during callback: {str(e)}", 400  # Return custom 400 error code for callback-related issues
+
 
 @app.route('/profile')
 def profile():
