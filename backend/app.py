@@ -2,6 +2,7 @@ from flask import Flask, redirect, session, request
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import secrets
+import logging
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)  
@@ -33,7 +34,11 @@ def callback():
         session['token_info'] = token_info  # Save token in session
         return redirect('/profile')  # Redirect to profile or dashboard
     except Exception as e:
-        return f"Error: {str(e)}", 500  # Print the error message for debugging
+        # Log the error for debugging purposes
+        app.logger.error(f"Error during callback: {str(e)}")
+        
+        # Return a custom error code (e.g., 400 for a callback error)
+        return f"Error during callback: {str(e)}", 400  # 400 indicates bad request or callback-related error
 
 @app.route('/profile')
 def profile():
