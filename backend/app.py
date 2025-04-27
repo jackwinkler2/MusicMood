@@ -29,6 +29,7 @@ def login():
 
 @app.route('/callback')
 def callback():
+    app.logger.debug(f"Callback request args: {request.args}")
     try:
         token_info = sp_oauth.get_access_token(request.args['code'])  # Exchange code for token
         session['token_info'] = token_info  # Save token in session
